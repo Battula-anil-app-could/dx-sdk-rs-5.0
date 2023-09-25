@@ -46,7 +46,7 @@ impl RelevantDirectory {
         self.dir_name().replace('-', "_")
     }
 }
-
+#[derive(Debug)]
 pub struct RelevantDirectories(pub(crate) Vec<RelevantDirectory>);
 
 impl RelevantDirectories {

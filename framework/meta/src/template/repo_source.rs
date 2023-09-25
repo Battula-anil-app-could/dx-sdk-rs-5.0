@@ -4,7 +4,7 @@ use std::{
 };
 
 use super::{RepoTempDownload, RepoVersion};
-
+#[derive(Debug)]
 pub enum RepoSource {
     Downloaded(RepoTempDownload),
     LocalPath(PathBuf),

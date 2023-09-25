@@ -13,6 +13,7 @@ pub async fn print_template_names(args: &TemplateListArgs) {
 
 pub fn template_names_from_repo(repo_temp_download: &RepoSource) -> Vec<String> {
     let sources = template_sources(repo_temp_download);
+    println!("sources is {:?}", sources);
     sources
         .iter()
         .map(|source| source.metadata.name.clone())

@@ -9,6 +9,7 @@ use super::{template_metadata::TemplateMetadata, RepoSource};
 
 const TEMPLATES_PATH_IN_REPO: &str = "contracts/examples";
 const TEMPLATE_TOML_FILE_NAME: &str = "mxsc-template.toml";
+#[derive(Debug)]
 
 pub struct TemplateSource<'a> {
     pub repo_temp_dir: &'a RepoSource,
@@ -28,9 +29,12 @@ impl<'a> TemplateSource<'a> {
 
 pub fn template_sources(repo_temp_dir: &RepoSource) -> Vec<TemplateSource<'_>> {
     let templates_path = repo_temp_dir.repo_path().join(TEMPLATES_PATH_IN_REPO);
+    println!("templates_path is {:?}", templates_path);
     let dirs = RelevantDirectories::find_all(&templates_path, &[]);
+    println!("dirs names {:?}", dirs);
     let mut sources = Vec::new();
     for dir in dirs.iter_contract_crates() {
+
         let template_metadata_path = dir.path.join(TEMPLATE_TOML_FILE_NAME);
         if template_metadata_path.is_file() {
             if let Ok(s) = fs::read_to_string(&template_metadata_path) {
@@ -38,13 +42,19 @@ pub fn template_sources(repo_temp_dir: &RepoSource) -> Vec<TemplateSource<'_>> {
                     toml::from_str(s.as_str()).unwrap_or_else(|error| {
                         panic!("error parsing {TEMPLATE_TOML_FILE_NAME}: {error}")
                     });
+                
+                println!("Found template: {:?}", metadata.name);
                 sources.push(TemplateSource {
                     repo_temp_dir,
                     source_path: dir.path.clone(),
                     metadata,
                 })
+            }else{
+                println!("Failed to read file: {:?}", template_metadata_path);
             }
-        }
+        }else{
+            println!("File not found: {:?}", template_metadata_path);
+        }  
     }
     sources
 }
